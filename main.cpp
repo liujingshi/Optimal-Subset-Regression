@@ -14,8 +14,10 @@ int main() {
     vector<vector<double> > F1 = f.MGF(x1);
     vector<double> x2 = f.Differential(x1);
     vector<vector<double> > F2 = f.MGF(x2);
+    vector<vector<double> > F3 = f.SumAdd(F1, x[0]);
     f.show(F0);
     f.show(F1);
     f.show(F2);
+    f.show(F3);
     return 0;
 }
