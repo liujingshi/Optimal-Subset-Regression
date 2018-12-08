@@ -37,25 +37,38 @@ int main()
     vector<double> x2 = f.Differential(x1);
     vector<vector<double> > F2 = f.MGF(x2);
     vector<vector<double> > F3 = f.SumAdd(F1, x[0]);
-    show(F0);
-    show(F1);
-    show(F2);
-    show(F3);
-    vector<double> CSC0 = f.CSC(x, F0);
-    vector<double> CSC1 = f.CSC(x, F1);
-    vector<double> CSC2 = f.CSC(x, F2);
-    vector<double> CSC3 = f.CSC(x, F3);
+    /*show(f.ArrIn(F0));
+    show(f.ArrIn(F1));
+    show(f.ArrIn(F2));
+    show(f.ArrIn(F3));*/
+    vector<double> CSC0 = f.CalcCSC(x, F0);
+    vector<double> CSC1 = f.CalcCSC(x, F1);
+    vector<double> CSC2 = f.CalcCSC(x, F2);
+    vector<double> CSC3 = f.CalcCSC(x, F3);
     /*vector<double> X20 = f.CalcX2(x, F0);
     vector<double> X21 = f.CalcX2(x, F1);
     vector<double> X22 = f.CalcX2(x, F2);
     vector<double> X23 = f.CalcX2(x, F3);*/
-    show(CSC0);
+    /*show(CSC0);
     show(CSC1);
     show(CSC2);
-    show(CSC3);
+    show(CSC3);*/
     /*show(X20);
     show(X21);
     show(X22);
     show(X23);*/
+    vector<vector<vector<double> > > F;
+    F.push_back(F0);
+    F.push_back(F1);
+    F.push_back(F2);
+    F.push_back(F3);
+    vector<vector<double> > CSC;
+    CSC.push_back(CSC0);
+    CSC.push_back(CSC1);
+    CSC.push_back(CSC2);
+    CSC.push_back(CSC3);
+    double xx = 11.07;
+    vector<vector<double> > P = f.RouSelect(F, CSC, xx);
+    show(f.ArrIn(P));
     return 0;
 }

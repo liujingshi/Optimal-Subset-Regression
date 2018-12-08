@@ -27,8 +27,6 @@ class Function
 
     double CalcS1(std::vector<double>, std::vector<double>);
 
-    std::vector<double> S1(std::vector<double>, std::vector<std::vector<double> >);
-
     double CalcUV(std::vector<double>);
 
     int CalcT(std::vector<double>, double, int t);
@@ -41,15 +39,15 @@ class Function
 
     std::vector<double> CalcCSC(std::vector<double>, std::vector<std::vector<double> >);
 
-    std::vector<double> CSC(std::vector<double>, std::vector<std::vector<double> >);
-
     double CalcX2(std::vector<double>, std::vector<double>);
 
     std::vector<double> CalcX2(std::vector<double>, std::vector<std::vector<double> >);
 
     std::vector<int> RouSelect(std::vector<double>, double);
 
-    //std::vector<int> RouSelect(std::vector<double>, double);
+    std::vector<std::vector<double> > RouSelect(std::vector<std::vector<std::vector<double> > >, std::vector<std::vector<double> >, double x);
+
+    std::vector<std::vector<double> > Group(std::vector<std::vector<double> >);
 };
 
 } // namespace func

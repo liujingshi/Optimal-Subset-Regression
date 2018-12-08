@@ -1,6 +1,6 @@
 #include <vector>
-#include <stdio.h>
 #include <cmath>
+#include <stdio.h>
 #include "Function.hpp"
 
 double func::Function::MGF(std::vector<double> x, int l, int i)
@@ -29,8 +29,7 @@ std::vector<std::vector<double> > func::Function::MGF(std::vector<double> x)
         }
         F.push_back(H);
     }
-    //return F;
-    return this->ArrIn(F);
+    return F;
 }
 
 std::vector<std::vector<double> > func::Function::ArrIn(std::vector<std::vector<double> > F)
@@ -64,7 +63,7 @@ double func::Function::SumAdd(std::vector<std::vector<double> > x, int l, int t)
     double sum = 0;
     for (int i = 0; i < t; i++)
     {
-        sum += x[i + 1][l];
+        sum += x[l][i + 1];
     }
     return sum;
 }
@@ -72,16 +71,15 @@ double func::Function::SumAdd(std::vector<std::vector<double> > x, int l, int t)
 std::vector<std::vector<double> > func::Function::SumAdd(std::vector<std::vector<double> > x, double x1)
 {
     std::vector<std::vector<double> > xa(x);
-    int m = (int)(x.size() / 3);
     for (int i = 0; i < xa.size(); i++)
     {
-        xa[0][i] = x1;
+        xa[i][0] = x1;
     }
-    for (int l = 0; l < m; l++)
+    for (int l = 0; l < xa.size(); l++)
     {
-        for (int i = 1; i < xa.size(); i++)
+        for (int i = 1; i < xa[l].size(); i++)
         {
-            xa[i][l] = x1 + this->SumAdd(x, l, i);
+            xa[l][i] = x1 + this->SumAdd(x, l, i);
         }
     }
     return xa;
@@ -116,27 +114,6 @@ double func::Function::CalcS1(std::vector<double> x, std::vector<double> xk)
     double Qk = this->CalcQ(x, xk);
     int n = x.size();
     double S1 = n * (1 - (Qk / Qx));
-    return S1;
-}
-
-std::vector<double> func::Function::S1(std::vector<double> x, std::vector<std::vector<double> > F) {
-    std::vector<double> S1;
-    std::vector<std::vector<double> > Ft = this->ArrIn(F);
-    double Qx = 0, Qk = 0, N = x.size();
-    double xb = this->MGF(x, 1, 1);
-    for (int i = 0; i < N; i++) {
-        Qx += (x[i] - xb) * (x[i] - xb);
-    }
-    Qx /= N;
-    for (int i = 0; i < Ft.size(); i++) {
-        N = Ft[i].size();
-        Qk = 0;
-        for (int j = 0; j < N; j++) {
-            Qk += (Ft[i][j] - x[j]) * (Ft[i][j] - x[j]);
-        }
-        Qk /= N;
-        S1.push_back(N * (1 - (Qk / Qx)));
-    }
     return S1;
 }
 
@@ -234,10 +211,6 @@ std::vector<double> func::Function::CalcCSC(std::vector<double> x, std::vector<s
     return CSC;
 }
 
-std::vector<double> func::Function::CSC(std::vector<double> x, std::vector<std::vector<double> > F) {
-    return this->CalcCSC(x, this->ArrIn(F));
-}
-
 double func::Function::CalcX2(std::vector<double> x, std::vector<double> f) {
     double X2 = 0;
     for (int i = 0; i < f.size(); i++) {
@@ -266,4 +239,18 @@ std::vector<int> func::Function::RouSelect(std::vector<double> c, double x) {
     return div;
 }
 
+std::vector<std::vector<double> > func::Function::RouSelect(std::vector<std::vector<std::vector<double> > > F, std::vector<std::vector<double> > CSC, double x) {
+    std::vector<std::vector<double> > P;
+    for (int i = 0; i < CSC.size(); i++) {
+        std::vector<int> temCSC = this->RouSelect(CSC[i], x);
+        for (int j = 0; j < temCSC.size(); j++) {
+            P.push_back(F[i][temCSC[j]]);
+        }
+    }
+    return P;
+}
 
+std::vector<std::vector<double> > func::Function::Group(std::vector<std::vector<double> > P) {
+    std::vector<std::vector<double> > Son;
+    
+}
