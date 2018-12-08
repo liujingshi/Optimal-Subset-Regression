@@ -2,38 +2,44 @@
 #define FUNCTION_HPP
 #include <vector>
 
-namespace func {
+namespace func
+{
 
-    class Function {
+class Function
+{
 
-    public:
+  public:
+    double MGF(std::vector<double>, int, int);
 
-        double MGF(std::vector<double>, int, int);
+    std::vector<std::vector<double> > MGF(std::vector<double>);
 
-        std::vector<std::vector<double> > MGF(std::vector<double>);
+    std::vector<std::vector<double> > ArrIn(std::vector<std::vector<double> >);
 
-        std::vector<std::vector<double> > ArrIn(std::vector<std::vector<double> >);
+    std::vector<double> Differential(std::vector<double>);
 
-        std::vector<double> Differential(std::vector<double>);
+    double SumAdd(std::vector<std::vector<double> >, int, int);
 
-        double SumAdd(std::vector<std::vector<double> >, int, int);
+    std::vector<std::vector<double> > SumAdd(std::vector<std::vector<double> >, double);
 
-        std::vector<std::vector<double> > SumAdd(std::vector<std::vector<double> >, double);
+    double CalcQ(std::vector<double>);
 
-        double CalcQ(std::vector<double>);
+    double CalcQ(std::vector<double>, std::vector<double>);
 
-        double CalcQ(std::vector<double>, std::vector<double>);
+    double CalcS1(std::vector<double>, std::vector<double>);
 
-        double CalcS1(std::vector<double>, std::vector<double>);
+    double CalcUV(std::vector<double>);
 
-        //double CalcS2();
+    int CalcT(std::vector<double>, double, int t);
 
-        //double CalcCSC();
+    std::vector<std::vector<double> > CalcNij(std::vector<double>, std::vector<double>);
 
-        void show(std::vector<std::vector<double> >);
+    double CalcS2(std::vector<double>, std::vector<double>);
 
-    };
+    double CalcCSC(std::vector<double>, std::vector<double>);
 
-}
+    std::vector<double> CalcCSC(std::vector<double>, std::vector<std::vector<double> >);
+};
+
+} // namespace func
 
 #endif
