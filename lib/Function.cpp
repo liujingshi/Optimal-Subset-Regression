@@ -7,9 +7,8 @@ double func::Function::MGF(std::vector<double> x, int l, int i)
 {
     double sum = 0;
     int num = (int)(x.size() / l);
-    for (int k = i - 1; k < x.size(); k += l)
-    {
-        sum += x[k];
+    for (int j = 0; j < num; j++) {
+        sum += x[i - 1 + (j * l)];
     }
     return sum / num;
 }
@@ -17,7 +16,8 @@ double func::Function::MGF(std::vector<double> x, int l, int i)
 std::vector<std::vector<double> > func::Function::MGF(std::vector<double> x)
 {
     std::vector<std::vector<double> > F;
-    for (int l = 1; l <= x.size(); l++)
+    int m = (int)(x.size() / 3);
+    for (int l = 1; l <= m; l++)
     {
         std::vector<double> H;
         while (H.size() < x.size())
@@ -29,24 +29,24 @@ std::vector<std::vector<double> > func::Function::MGF(std::vector<double> x)
         }
         F.push_back(H);
     }
+    //return F;
     return this->ArrIn(F);
 }
 
 std::vector<std::vector<double> > func::Function::ArrIn(std::vector<std::vector<double> > F)
 {
+    int w = F.size();
+    int h = F[0].size();
+    std::vector<double> item(w, 0);
+    std::vector<std::vector<double> > Arr(h, item);
     for (int i = 0; i < F.size(); i++)
     {
         for (int j = 0; j < F[i].size(); j++)
         {
-            if (i > j)
-            {
-                double tem = F[i][j];
-                F[i][j] = F[j][i];
-                F[j][i] = tem;
-            }
+            Arr[j][i] = F[i][j];
         }
     }
-    return F;
+    return Arr;
 }
 
 std::vector<double> func::Function::Differential(std::vector<double> x)
@@ -64,7 +64,7 @@ double func::Function::SumAdd(std::vector<std::vector<double> > x, int l, int t)
     double sum = 0;
     for (int i = 0; i < t; i++)
     {
-        sum += x[l][i + 1];
+        sum += x[i + 1][l];
     }
     return sum;
 }
@@ -72,15 +72,16 @@ double func::Function::SumAdd(std::vector<std::vector<double> > x, int l, int t)
 std::vector<std::vector<double> > func::Function::SumAdd(std::vector<std::vector<double> > x, double x1)
 {
     std::vector<std::vector<double> > xa(x);
+    int m = (int)(x.size() / 3);
     for (int i = 0; i < xa.size(); i++)
     {
-        xa[i][0] = x1;
+        xa[0][i] = x1;
     }
-    for (int l = 0; l < xa.size(); l++)
+    for (int l = 0; l < m; l++)
     {
         for (int i = 1; i < xa.size(); i++)
         {
-            xa[l][i] = x1 + this->SumAdd(x, l, i);
+            xa[i][l] = x1 + this->SumAdd(x, l, i);
         }
     }
     return xa;
@@ -115,6 +116,27 @@ double func::Function::CalcS1(std::vector<double> x, std::vector<double> xk)
     double Qk = this->CalcQ(x, xk);
     int n = x.size();
     double S1 = n * (1 - (Qk / Qx));
+    return S1;
+}
+
+std::vector<double> func::Function::S1(std::vector<double> x, std::vector<std::vector<double> > F) {
+    std::vector<double> S1;
+    std::vector<std::vector<double> > Ft = this->ArrIn(F);
+    double Qx = 0, Qk = 0, N = x.size();
+    double xb = this->MGF(x, 1, 1);
+    for (int i = 0; i < N; i++) {
+        Qx += (x[i] - xb) * (x[i] - xb);
+    }
+    Qx /= N;
+    for (int i = 0; i < Ft.size(); i++) {
+        N = Ft[i].size();
+        Qk = 0;
+        for (int j = 0; j < N; j++) {
+            Qk += (Ft[i][j] - x[j]) * (Ft[i][j] - x[j]);
+        }
+        Qk /= N;
+        S1.push_back(N * (1 - (Qk / Qx)));
+    }
     return S1;
 }
 
@@ -195,7 +217,6 @@ double func::Function::CalcS2(std::vector<double> x, std::vector<double> f) {
             R3 += Nj * log(Nj);
         }
     }
-    
     return 2 * (R1 + (n - 1) * log(n - 1) - R2 - R3);
 }
 
@@ -212,4 +233,37 @@ std::vector<double> func::Function::CalcCSC(std::vector<double> x, std::vector<s
     }
     return CSC;
 }
+
+std::vector<double> func::Function::CSC(std::vector<double> x, std::vector<std::vector<double> > F) {
+    return this->CalcCSC(x, this->ArrIn(F));
+}
+
+double func::Function::CalcX2(std::vector<double> x, std::vector<double> f) {
+    double X2 = 0;
+    for (int i = 0; i < f.size(); i++) {
+        if (f[i] != 0) {
+            X2 += (x[i] - f[i]) * (x[i] - f[i]) / f[i];
+        }
+    }
+    return X2;
+}
+
+std::vector<double> func::Function::CalcX2(std::vector<double> x, std::vector<std::vector<double> > F) {
+    std::vector<double> X2;
+    for (int i = 0; i < F.size(); i++) {
+        X2.push_back(this->CalcX2(x, F[i]));
+    }
+    return X2;
+}
+
+std::vector<int> func::Function::RouSelect(std::vector<double> c, double x) {
+    std::vector<int> div;
+    for (int i = 0; i < c.size(); i++) {
+        if (c[i] > x) {
+            div.push_back(i);
+        }
+    }
+    return div;
+}
+
 

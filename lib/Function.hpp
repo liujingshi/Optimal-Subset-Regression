@@ -27,6 +27,8 @@ class Function
 
     double CalcS1(std::vector<double>, std::vector<double>);
 
+    std::vector<double> S1(std::vector<double>, std::vector<std::vector<double> >);
+
     double CalcUV(std::vector<double>);
 
     int CalcT(std::vector<double>, double, int t);
@@ -38,6 +40,16 @@ class Function
     double CalcCSC(std::vector<double>, std::vector<double>);
 
     std::vector<double> CalcCSC(std::vector<double>, std::vector<std::vector<double> >);
+
+    std::vector<double> CSC(std::vector<double>, std::vector<std::vector<double> >);
+
+    double CalcX2(std::vector<double>, std::vector<double>);
+
+    std::vector<double> CalcX2(std::vector<double>, std::vector<std::vector<double> >);
+
+    std::vector<int> RouSelect(std::vector<double>, double);
+
+    //std::vector<int> RouSelect(std::vector<double>, double);
 };
 
 } // namespace func
