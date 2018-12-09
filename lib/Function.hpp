@@ -47,6 +47,10 @@ class Function
 
     std::vector<std::vector<double> > RouSelect(std::vector<std::vector<std::vector<double> > >, std::vector<std::vector<double> >, double x);
 
+    void TwoAddOne(std::vector<int>&);
+
+    bool TwoIsFull(std::vector<int>);
+
     std::vector<std::vector<double> > Group(std::vector<std::vector<double> >);
 };
 

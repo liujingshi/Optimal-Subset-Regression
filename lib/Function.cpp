@@ -250,7 +250,47 @@ std::vector<std::vector<double> > func::Function::RouSelect(std::vector<std::vec
     return P;
 }
 
+void func::Function::TwoAddOne(std::vector<int> &two) {
+    int n = two.size(), t = 0;
+    two[n-1]++;
+    for (int i = n - 1; i >= 0; i--) {
+        two[i] += t;
+        if (two[i] > 1) {
+            t = 1;
+            two[i] = 0;
+        } else {
+            t = 0;
+            break;
+        }
+    }
+}
+
+bool func::Function::TwoIsFull(std::vector<int> two) {
+    bool result = true;
+    for (int i = 0; i < two.size(); i++) {
+        if (two[i] == 0) {
+            result = false;
+            break;
+        }
+    }
+    return result;
+}
+
 std::vector<std::vector<double> > func::Function::Group(std::vector<std::vector<double> > P) {
     std::vector<std::vector<double> > Son;
-    
+    std::vector<int> two(P.size(), 0);
+    while (!this->TwoIsFull(two)) {
+        std::vector<double> tem;
+        this->TwoAddOne(two);
+        for (int i = 0; i < P.size(); i++) {
+            if (two[i] == 0) {
+                continue;
+            }
+            for (int j = 0; j < P[i].size(); j++) {
+                tem.push_back(P[i][j]);
+            }
+        }
+        Son.push_back(tem);
+    }
+    return Son;
 }

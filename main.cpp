@@ -69,6 +69,9 @@ int main()
     CSC.push_back(CSC3);
     double xx = 11.07;
     vector<vector<double> > P = f.RouSelect(F, CSC, xx);
-    show(f.ArrIn(P));
+    //show(f.ArrIn(P));
+    vector<vector<double> > Son = f.Group(P);
+    //show(Son);
+    
     return 0;
 }
