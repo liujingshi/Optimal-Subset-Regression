@@ -503,57 +503,151 @@ int func::Function::FindMaxCSC(std::vector<double> CSC) {
 }
 
 std::vector<double> func::Function::Predict(std::vector<std::vector<double> > A, std::vector<std::vector<double> > Son, int q) {
-    std::vector<double> result;
-    std::vector<std::vector<double> > qStep;
-    for (int i = 0; i < Son.size(); i++) {
-        std::vector<double> st;
-        for (int j = 0; j < q; j++) {
-            st.push_back(Son[i][j]);
-        }
-        qStep.push_back(st);
-    }
-    long Frow = qStep.size();
-    long Fcol = qStep[0].size();
-    for (int i = 0; i < Fcol; i++) {
-        double res = A[0][0];
-        for (int j = 0; j < Frow; j++) {
-            res += A[j+1][0] * qStep[j][i];
-        }
-        result.push_back(res);
-    }
-    return result;
+	std::vector<double> result;
+	std::vector<std::vector<double> > qStep;
+	for (int i = 0; i < Son.size(); i++) {
+		std::vector<double> st;
+		for (int j = Son[i].size() - q; j < Son[i].size(); j++) {
+			st.push_back(Son[i][j]);
+		}
+		qStep.push_back(st);
+	}
+	long Frow = qStep.size();
+	long Fcol = qStep[0].size();
+	for (int i = 0; i < Fcol; i++) {
+		double res = A[0][0];
+		for (int j = 0; j < Frow; j++) {
+			res += A[j + 1][0] * qStep[j][i];
+		}
+		result.push_back(res);
+	}
+	return result;
 }
 
 std::vector<double> func::Function::Predict(std::vector<double> x, int q) {
-    int n = x.size();
-    std::vector<std::vector<double> > F0 = this->MGF(x, n);
-    std::vector<double> x1 = this->Differential(x);
-    std::vector<std::vector<double> > F1 = this->MGF(x1, n);
-    std::vector<double> x2 = this->Differential(x1);
-    std::vector<std::vector<double> > F2 = this->MGF(x2, n);
-    std::vector<std::vector<double> > F3 = this->SumAdd(F1, x[0]);
-    std::vector<double> CSC0 = this->CalcCSCs(x, F0);
-    std::vector<double> CSC1 = this->CalcCSCs(x, F1);
-    std::vector<double> CSC2 = this->CalcCSCs(x, F2);
-    std::vector<double> CSC3 = this->CalcCSCs(x, F3);
-    std::vector<std::vector<std::vector<double> > > F;
-    F.push_back(F0);
-    F.push_back(F1);
-    F.push_back(F2);
-    F.push_back(F3);
-    std::vector<std::vector<double> > CSC;
-    CSC.push_back(CSC0);
-    CSC.push_back(CSC1);
-    CSC.push_back(CSC2);
-    CSC.push_back(CSC3);
-    double xx = 11.07;
-    std::vector<std::vector<double> > P = this->RouSelect(F, CSC, xx);
-    std::vector<std::vector<std::vector<double> > > Son = this->Group(P);
-    std::vector<double> lastCSClist = this->CalcCSCs(x, Son);
-    int lastCSCi = this->FindMaxCSC(lastCSClist);
-    std::vector<std::vector<double> > lastSon = Son[lastCSCi];
-    std::vector<std::vector<double> > lastXb = this->Xb(lastSon);
-    std::vector<std::vector<double> > lastA = this->ComeBackP(x, lastXb);
-    std::vector<double> result = this->Predict(lastA, lastSon, q);
-    return result;
+	int n = x.size();
+	std::vector<std::vector<double> > F0 = this->MGF(x, n);
+	std::vector<double> x1 = this->Differential(x);
+	std::vector<std::vector<double> > F1 = this->MGF(x1, n);
+	std::vector<double> x2 = this->Differential(x1);
+	std::vector<std::vector<double> > F2 = this->MGF(x2, n);
+	std::vector<std::vector<double> > F3 = this->SumAdd(F1, x[0]);
+	// Predict
+	std::vector<std::vector<double> > F0p = this->MGF(x, n + q);
+	std::vector<double> x1p = this->Differential(x);
+	std::vector<std::vector<double> > F1p = this->MGF(x1, n + q);
+	std::vector<double> x2p = this->Differential(x1);
+	std::vector<std::vector<double> > F2p = this->MGF(x2, n + q);
+	std::vector<std::vector<double> > F3p = this->SumAdd(F1, x[0]);
+	// Predict
+	std::vector<double> CSC0 = this->CalcCSCs(x, F0);
+	std::vector<double> CSC1 = this->CalcCSCs(x, F1);
+	std::vector<double> CSC2 = this->CalcCSCs(x, F2);
+	std::vector<double> CSC3 = this->CalcCSCs(x, F3);
+	std::vector<std::vector<std::vector<double> > > F;
+	F.push_back(F0);
+	F.push_back(F1);
+	F.push_back(F2);
+	F.push_back(F3);
+	std::vector<std::vector<double> > CSC;
+	CSC.push_back(CSC0);
+	CSC.push_back(CSC1);
+	CSC.push_back(CSC2);
+	CSC.push_back(CSC3);
+	double xx = 11.07;
+	std::vector<std::vector<double> > P = this->RouSelect(F, CSC, xx);
+	std::vector<std::vector<std::vector<double> > > Son = this->Group(P);
+	std::vector<double> lastCSClist = this->CalcCSCs(x, Son);
+	int lastCSCi = this->FindMaxCSC(lastCSClist);
+	std::vector<std::vector<double> > lastSon = Son[lastCSCi];
+	std::vector<std::vector<double> > lastXb = this->Xb(lastSon);
+	std::vector<std::vector<double> > lastA = this->ComeBackP(x, lastXb);
+	// Predict
+	std::vector<std::vector<double> > newSon;
+	for (int i = 0; i < lastSon.size(); i++) {
+		bool isFind = false;
+		for (int j = 0; j < F0.size(); j++) {
+			bool hasDif = false;
+			for (int k = 0; k < F0[j].size(); k++) {
+				if (fabs(lastSon[i][k] - F0[j][k]) < 0.0001) {
+					continue;
+				}
+				hasDif = true;
+			}
+			if (hasDif) {
+				continue;
+			}
+			else {
+				isFind = true;
+				newSon.push_back(F0p[j]);
+				break;
+			}
+		}
+		if (isFind) {
+			continue;
+		}
+		for (int j = 0; j < F1.size(); j++) {
+			bool hasDif = false;
+			for (int k = 0; k < F1[j].size(); k++) {
+				if (fabs(lastSon[i][k] - F1[j][k]) < 0.0001) {
+					continue;
+				}
+				hasDif = true;
+			}
+			if (hasDif) {
+				continue;
+			}
+			else {
+				isFind = true;
+				newSon.push_back(F1p[j]);
+				break;
+			}
+		}
+		if (isFind) {
+			continue;
+		}
+		for (int j = 0; j < F2.size(); j++) {
+			bool hasDif = false;
+			for (int k = 0; k < F2[j].size(); k++) {
+				if (fabs(lastSon[i][k] - F2[j][k]) < 0.0001) {
+					continue;
+				}
+				hasDif = true;
+			}
+			if (hasDif) {
+				continue;
+			}
+			else {
+				isFind = true;
+				newSon.push_back(F2p[j]);
+				break;
+			}
+		}
+		if (isFind) {
+			continue;
+		}
+		for (int j = 0; j < F3.size(); j++) {
+			bool hasDif = false;
+			for (int k = 0; k < F3[j].size(); k++) {
+				if (fabs(lastSon[i][k] - F3[j][k]) < 0.0001) {
+					continue;
+				}
+				hasDif = true;
+			}
+			if (hasDif) {
+				continue;
+			}
+			else {
+				isFind = true;
+				newSon.push_back(F3p[j]);
+				break;
+			}
+		}
+		if (isFind) {
+			continue;
+		}
+	}
+	// Predict
+	std::vector<double> result = this->Predict(lastA, newSon, q);
+	return result;
 }
