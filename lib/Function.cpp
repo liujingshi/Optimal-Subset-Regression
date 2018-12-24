@@ -13,16 +13,16 @@ double func::Function::MGF(std::vector<double> x, int l, int i)
     return sum / num;
 }
 
-std::vector<std::vector<double> > func::Function::MGF(std::vector<double> x)
+std::vector<std::vector<double> > func::Function::MGF(std::vector<double> x, int n)
 {
     std::vector<std::vector<double> > F;
-    int m = (int)(x.size() / 3);
+    int m = (int)(n / 3);
     for (int l = 1; l <= m; l++)
     {
         std::vector<double> H;
-        while (H.size() < x.size())
+        while (H.size() < n)
         {
-            for (int i = 1; i <= l && H.size() < x.size(); i++)
+            for (int i = 1; i <= l && H.size() < n; i++)
             {
                 H.push_back(this->MGF(x, l, i));
             }
@@ -203,7 +203,22 @@ double func::Function::CalcCSC(std::vector<double> x, std::vector<double> f) {
     return S1 + S2;
 }
 
-std::vector<double> func::Function::CalcCSC(std::vector<double> x, std::vector<std::vector<double> > F) {
+double func::Function::CalcCSC(std::vector<double> x, std::vector<std::vector<double> > F) {
+    std::vector<double> f = this->ComeBack(x, F);
+    return this->CalcCSC(x, f);
+}
+
+std::vector<double> func::Function::CalcCSCs(std::vector<double> x, std::vector<std::vector<double> > F) {
+    std::vector<double> CSC;
+    for (int i = 0; i < F.size(); i++) {
+        std::vector<std::vector<double> > t;
+        t.push_back(F[i]);
+        CSC.push_back(this->CalcCSC(x, t));
+    }
+    return CSC;
+}
+
+std::vector<double> func::Function::CalcCSCs(std::vector<double> x, std::vector<std::vector<std::vector<double> > > F) {
     std::vector<double> CSC;
     for (int i = 0; i < F.size(); i++) {
         CSC.push_back(this->CalcCSC(x, F[i]));
@@ -276,21 +291,269 @@ bool func::Function::TwoIsFull(std::vector<int> two) {
     return result;
 }
 
-std::vector<std::vector<double> > func::Function::Group(std::vector<std::vector<double> > P) {
-    std::vector<std::vector<double> > Son;
+std::vector<std::vector<std::vector<double> > > func::Function::Group(std::vector<std::vector<double> > P) {
+    std::vector<std::vector<std::vector<double> > > Son;
     std::vector<int> two(P.size(), 0);
     while (!this->TwoIsFull(two)) {
-        std::vector<double> tem;
+        std::vector<std::vector<double> > tem;
         this->TwoAddOne(two);
         for (int i = 0; i < P.size(); i++) {
             if (two[i] == 0) {
                 continue;
             }
-            for (int j = 0; j < P[i].size(); j++) {
-                tem.push_back(P[i][j]);
-            }
+            tem.push_back(P[i]);
         }
         Son.push_back(tem);
     }
     return Son;
+}
+
+std::vector<std::vector<double> > func::Function::Mul(std::vector<std::vector<double> > arrA, std::vector<std::vector<double> > arrB) {
+	int rowA = arrA.size();
+	int colA = arrA[0].size();
+	int rowB = arrB.size();
+	int colB = arrB[0].size();
+	std::vector<std::vector<double> > res;
+	if (colA != rowB) {
+		return res;
+	} else {
+		res.resize(rowA);
+		for (int i = 0; i < rowA; ++i) {
+			res[i].resize(colB);
+		}
+		for (int i = 0; i < rowA; ++i) {
+			for (int j = 0; j < colB; ++j) {
+				for (int k = 0; k < colA; ++k) {
+					res[i][j] += arrA[i][k] * arrB[k][j];
+				}
+			}
+		}
+	}
+	return res;
+}
+
+std::vector<std::vector<double> > func::Function::Inv(std::vector<std::vector<double> > a)  
+{  
+    int n = a.size();   
+    std::vector<std::vector<double> > res(n);
+    for(int i=0;i<n;i++) {
+        res[i].resize(n);
+    }
+    int *is = new int[n];  
+    int *js = new int[n];  
+    int i,j,k;  
+    double d,p;  
+    for ( k = 0; k < n; k++)  
+    {  
+        d = 0.0;  
+        for (i=k; i<=n-1; i++)  
+            for (j=k; j<=n-1; j++)  
+            {  
+                p=fabs(a[i][j]);  
+                if (p>d)
+                        { d=p; is[k]=i; js[k]=j;}  
+            }  
+            if ( 0.0 == d )  
+            {  
+                delete[] is; delete[] js;
+                return res;  
+            }  
+            if (is[k]!=k)  
+                for (j=0; j<=n-1; j++)  
+                {  
+                    p=a[k][j];  
+                    a[k][j]=a[is[k]][j];  
+                    a[is[k]][j]=p;  
+                }  
+            if (js[k]!=k)  
+                for (i=0; i<=n-1; i++)  
+                {  
+                    p=a[i][k];  
+                    a[i][k]=a[i][js[k]];  
+                    a[i][js[k]]=p;  
+                }  
+            a[k][k] = 1.0/a[k][k];  
+            for (j=0; j<=n-1; j++)  
+                if (j!=k)  
+                {  
+                    a[k][j] *= a[k][k];  
+                }  
+            for (i=0; i<=n-1; i++)  
+                if (i!=k)  
+                    for (j=0; j<=n-1; j++)  
+                        if (j!=k)  
+                        {  
+                            a[i][j] -= a[i][k]*a[k][j];  
+                        }  
+            for (i=0; i<=n-1; i++)  
+                if (i!=k)  
+                {  
+                    a[i][k] = -a[i][k]*a[k][k];  
+                }  
+    }  
+    for ( k = n-1; k >= 0; k--)  
+    {  
+        if (js[k]!=k)  
+            for (j=0; j<=n-1; j++)  
+            {  
+                p = a[k][j];  
+                a[k][j] = a[js[k]][j];  
+                a[js[k]][j]=p;  
+            }  
+            if (is[k]!=k)  
+                for (i=0; i<=n-1; i++)  
+                {   
+                    p = a[i][k];  
+                    a[i][k]=a[i][is[k]];  
+                    a[i][is[k]] = p;  
+                }  
+    }  
+    delete[] is; delete[] js; 
+    res = a;
+    return res;  
+}
+
+std::vector<std::vector<double> > Add(std::vector<std::vector<double> > arrA, std::vector<std::vector<double> > arrB)
+{
+    int rowA = arrA.size();
+    int colA = arrA[0].size();
+    int rowB = arrB.size();
+    int colB = arrB[0].size();
+    std::vector<std::vector<double> >  res;
+    if ((colA != colB) || (rowA != rowB))
+    {
+        return res;
+    }
+    else
+    {
+        res.resize(rowA);
+        for (int i = 0; i < rowA; ++i)
+        {
+            res[i].resize(colB);
+        }
+        for (int i = 0; i < rowA; ++i)
+        {
+            for (int j = 0; j < colB; ++j)
+            {
+
+                res[i][j] = arrA[i][j] + arrB[i][j];
+                
+            }
+        }
+    }
+    return res;
+}
+
+std::vector<std::vector<double> > func::Function::Xb(std::vector<double> x) {
+    std::vector<std::vector<double> > result;
+    std::vector<double> temp(x.size(), 1);
+    result.push_back(temp);
+    result.push_back(x);
+    return ArrIn(result);
+}
+
+std::vector<std::vector<double> > func::Function::Xb(std::vector<std::vector<double> > F) {
+    std::vector<std::vector<double> > result;
+    std::vector<double> temp(F[0].size(), 1);
+    result.push_back(temp);
+    for (int i = 0; i < F.size(); i++) {
+        result.push_back(F[i]);
+    }
+    return ArrIn(result);
+}
+
+std::vector<std::vector<double> > func::Function::ComeBackP(std::vector<double> y, std::vector<std::vector<double> > Xb) {
+    std::vector<std::vector<double> > p;
+    p.push_back(y);
+    p = this->ArrIn(p);
+    std::vector<std::vector<double> > XbT = this->ArrIn(Xb);
+    std::vector<std::vector<double> > XbTMXb = this->Mul(XbT, Xb);
+    std::vector<std::vector<double> > XbTMXbN = this->Inv(XbTMXb);
+    std::vector<std::vector<double> > XbTMXbNMXbT = this->Mul(XbTMXbN, XbT);
+    std::vector<std::vector<double> > res = this->Mul(XbTMXbNMXbT, p);
+    return res;
+}
+
+std::vector<double> func::Function::ComeBack(std::vector<double> x, std::vector<std::vector<double> > F) {
+    std::vector<std::vector<double> > Xb = this->Xb(F);
+    std::vector<std::vector<double> > a = this->ComeBackP(x, Xb);
+    std::vector<double> result;
+    long Frow = F.size();
+    long Fcol = F[0].size();
+    for (int i = 0; i < Fcol; i++) {
+        double res = a[0][0];
+        for (int j = 0; j < Frow; j++) {
+            res += a[j+1][0] * F[j][i];
+        }
+        result.push_back(res);
+    }
+    return result;
+}
+
+int func::Function::FindMaxCSC(std::vector<double> CSC) {
+    int res = 0;
+    double maxCSC = CSC[0];
+    for (int i = 1; i < CSC.size(); i++) {
+        if (CSC[i] > maxCSC) {
+            maxCSC = CSC[i];
+            res = i;
+        }
+    }
+    return res;
+}
+
+std::vector<double> func::Function::Predict(std::vector<std::vector<double> > A, std::vector<std::vector<double> > Son, int q) {
+    std::vector<double> result;
+    std::vector<std::vector<double> > qStep;
+    for (int i = 0; i < Son.size(); i++) {
+        std::vector<double> st;
+        for (int j = 0; j < q; j++) {
+            st.push_back(Son[i][j]);
+        }
+        qStep.push_back(st);
+    }
+    long Frow = qStep.size();
+    long Fcol = qStep[0].size();
+    for (int i = 0; i < Fcol; i++) {
+        double res = A[0][0];
+        for (int j = 0; j < Frow; j++) {
+            res += A[j+1][0] * qStep[j][i];
+        }
+        result.push_back(res);
+    }
+    return result;
+}
+
+std::vector<double> func::Function::Predict(std::vector<double> x, int q) {
+    int n = x.size();
+    std::vector<std::vector<double> > F0 = this->MGF(x, n);
+    std::vector<double> x1 = this->Differential(x);
+    std::vector<std::vector<double> > F1 = this->MGF(x1, n);
+    std::vector<double> x2 = this->Differential(x1);
+    std::vector<std::vector<double> > F2 = this->MGF(x2, n);
+    std::vector<std::vector<double> > F3 = this->SumAdd(F1, x[0]);
+    std::vector<double> CSC0 = this->CalcCSCs(x, F0);
+    std::vector<double> CSC1 = this->CalcCSCs(x, F1);
+    std::vector<double> CSC2 = this->CalcCSCs(x, F2);
+    std::vector<double> CSC3 = this->CalcCSCs(x, F3);
+    std::vector<std::vector<std::vector<double> > > F;
+    F.push_back(F0);
+    F.push_back(F1);
+    F.push_back(F2);
+    F.push_back(F3);
+    std::vector<std::vector<double> > CSC;
+    CSC.push_back(CSC0);
+    CSC.push_back(CSC1);
+    CSC.push_back(CSC2);
+    CSC.push_back(CSC3);
+    double xx = 11.07;
+    std::vector<std::vector<double> > P = this->RouSelect(F, CSC, xx);
+    std::vector<std::vector<std::vector<double> > > Son = this->Group(P);
+    std::vector<double> lastCSClist = this->CalcCSCs(x, Son);
+    int lastCSCi = this->FindMaxCSC(lastCSClist);
+    std::vector<std::vector<double> > lastSon = Son[lastCSCi];
+    std::vector<std::vector<double> > lastXb = this->Xb(lastSon);
+    std::vector<std::vector<double> > lastA = this->ComeBackP(x, lastXb);
+    std::vector<double> result = this->Predict(lastA, lastSon, q);
+    return result;
 }
