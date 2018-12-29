@@ -1,5 +1,5 @@
-cpp = Function.cpp
-cppo = Function.o
+cpp = Function.cpp Function.1.cpp
+cppo = Function.o Function.1.o
 libPath = lib
 lib = lib
 liba = $(lib).a

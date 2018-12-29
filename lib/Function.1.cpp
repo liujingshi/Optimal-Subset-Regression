@@ -1,9 +1,9 @@
 #include <vector>
 #include <cmath>
 #include <stdio.h>
-#include "Function.hpp"
+#include "Function.1.hpp"
 
-double func::Function::MGF(std::vector<double> x, int l, int i)
+double func1::Function::MGF(std::vector<double> x, int l, int i)
 {
 	double sum = 0;
 	int num = (int)(x.size() / l);
@@ -13,7 +13,7 @@ double func::Function::MGF(std::vector<double> x, int l, int i)
 	return sum / num;
 }
 
-std::vector<std::vector<double> > func::Function::MGF(std::vector<double> x, int n)
+std::vector<std::vector<double> > func1::Function::MGF(std::vector<double> x, int n)
 {
 	std::vector<std::vector<double> > F;
 	int m = (int)(n / 3);
@@ -32,7 +32,7 @@ std::vector<std::vector<double> > func::Function::MGF(std::vector<double> x, int
 	return F;
 }
 
-std::vector<std::vector<double> > func::Function::ArrIn(std::vector<std::vector<double> > F)
+std::vector<std::vector<double> > func1::Function::ArrIn(std::vector<std::vector<double> > F)
 {
 	int w = F.size();
 	int h = F[0].size();
@@ -48,7 +48,7 @@ std::vector<std::vector<double> > func::Function::ArrIn(std::vector<std::vector<
 	return Arr;
 }
 
-std::vector<double> func::Function::Differential(std::vector<double> x)
+std::vector<double> func1::Function::Differential(std::vector<double> x)
 {
 	std::vector<double> xd;
 	for (int i = 1; i < x.size(); i++)
@@ -58,7 +58,7 @@ std::vector<double> func::Function::Differential(std::vector<double> x)
 	return xd;
 }
 
-double func::Function::SumAdd(std::vector<std::vector<double> > x, int l, int t)
+double func1::Function::SumAdd(std::vector<std::vector<double> > x, int l, int t)
 {
 	double sum = 0;
 	for (int i = 0; i < t; i++)
@@ -68,7 +68,7 @@ double func::Function::SumAdd(std::vector<std::vector<double> > x, int l, int t)
 	return sum;
 }
 
-std::vector<std::vector<double> > func::Function::SumAdd(std::vector<std::vector<double> > x, double x1)
+std::vector<std::vector<double> > func1::Function::SumAdd(std::vector<std::vector<double> > x, double x1)
 {
 	std::vector<std::vector<double> > xa(x);
 	for (int i = 0; i < xa.size(); i++)
@@ -85,7 +85,7 @@ std::vector<std::vector<double> > func::Function::SumAdd(std::vector<std::vector
 	return xa;
 }
 
-double func::Function::CalcQ(std::vector<double> x)
+double func1::Function::CalcQ(std::vector<double> x)
 {
 	double xb = this->MGF(x, 1, 1);
 	int n = x.size();
@@ -97,7 +97,7 @@ double func::Function::CalcQ(std::vector<double> x)
 	return sum / n;
 }
 
-double func::Function::CalcQ(std::vector<double> x, std::vector<double> xt)
+double func1::Function::CalcQ(std::vector<double> x, std::vector<double> xt)
 {
 	int n = xt.size();
 	double sum = 0;
@@ -108,7 +108,7 @@ double func::Function::CalcQ(std::vector<double> x, std::vector<double> xt)
 	return sum / n;
 }
 
-double func::Function::CalcS1(std::vector<double> x, std::vector<double> xk)
+double func1::Function::CalcS1(std::vector<double> x, std::vector<double> xk)
 {
 	double Qx = this->CalcQ(x);
 	double Qk = this->CalcQ(x, xk);
@@ -117,7 +117,7 @@ double func::Function::CalcS1(std::vector<double> x, std::vector<double> xk)
 	return S1;
 }
 
-double func::Function::CalcUV(std::vector<double> x)
+double func1::Function::CalcUV(std::vector<double> x)
 {
 	double sum = 0;
 	double n = x.size();
@@ -128,7 +128,7 @@ double func::Function::CalcUV(std::vector<double> x)
 	return sum / n;
 }
 
-int func::Function::CalcT(std::vector<double> x, double u, int t)
+int func1::Function::CalcT(std::vector<double> x, double u, int t)
 {
 	int T = 0;
 	if (x[t] > u)
@@ -146,7 +146,7 @@ int func::Function::CalcT(std::vector<double> x, double u, int t)
 	return T;
 }
 
-std::vector<std::vector<double> > func::Function::CalcNij(std::vector<double> x, std::vector<double> f)
+std::vector<std::vector<double> > func1::Function::CalcNij(std::vector<double> x, std::vector<double> f)
 {
 	std::vector<double> x1 = this->Differential(x);
 	std::vector<double> f1 = this->Differential(f);
@@ -163,7 +163,7 @@ std::vector<std::vector<double> > func::Function::CalcNij(std::vector<double> x,
 	return Nij;
 }
 
-double func::Function::CalcS2(std::vector<double> x, std::vector<double> f) {
+double func1::Function::CalcS2(std::vector<double> x, std::vector<double> f) {
 	std::vector<std::vector<double> > Nij = this->CalcNij(x, f);
 	double R1 = 0, R2 = 0, R3 = 0, Ni = 0, Nj = 0, tem = 0;
 	int n = x.size();
@@ -197,18 +197,18 @@ double func::Function::CalcS2(std::vector<double> x, std::vector<double> f) {
 	return 2 * (R1 + (n - 1) * log(n - 1) - R2 - R3);
 }
 
-double func::Function::CalcCSC(std::vector<double> x, std::vector<double> f) {
+double func1::Function::CalcCSC(std::vector<double> x, std::vector<double> f) {
 	double S1 = this->CalcS1(x, f);
 	double S2 = this->CalcS2(x, f);
 	return S1 + S2;
 }
 
-double func::Function::CalcCSC(std::vector<double> x, std::vector<std::vector<double> > F) {
+double func1::Function::CalcCSC(std::vector<double> x, std::vector<std::vector<double> > F) {
 	std::vector<double> f = this->ComeBack(x, F);
 	return this->CalcCSC(x, f);
 }
 
-std::vector<double> func::Function::CalcCSCs(std::vector<double> x, std::vector<std::vector<double> > F) {
+std::vector<double> func1::Function::CalcCSCs(std::vector<double> x, std::vector<std::vector<double> > F) {
 	std::vector<double> CSC;
 	for (int i = 0; i < F.size(); i++) {
 		std::vector<std::vector<double> > t;
@@ -218,7 +218,7 @@ std::vector<double> func::Function::CalcCSCs(std::vector<double> x, std::vector<
 	return CSC;
 }
 
-std::vector<double> func::Function::CalcCSCs(std::vector<double> x, std::vector<std::vector<std::vector<double> > > F) {
+std::vector<double> func1::Function::CalcCSCs(std::vector<double> x, std::vector<std::vector<std::vector<double> > > F) {
 	std::vector<double> CSC;
 	for (int i = 0; i < F.size(); i++) {
 		CSC.push_back(this->CalcCSC(x, F[i]));
@@ -226,7 +226,7 @@ std::vector<double> func::Function::CalcCSCs(std::vector<double> x, std::vector<
 	return CSC;
 }
 
-double func::Function::CalcX2(std::vector<double> x, std::vector<double> f) {
+double func1::Function::CalcX2(std::vector<double> x, std::vector<double> f) {
 	double X2 = 0;
 	for (int i = 0; i < f.size(); i++) {
 		if (f[i] != 0) {
@@ -236,7 +236,7 @@ double func::Function::CalcX2(std::vector<double> x, std::vector<double> f) {
 	return X2;
 }
 
-std::vector<double> func::Function::CalcX2(std::vector<double> x, std::vector<std::vector<double> > F) {
+std::vector<double> func1::Function::CalcX2(std::vector<double> x, std::vector<std::vector<double> > F) {
 	std::vector<double> X2;
 	for (int i = 0; i < F.size(); i++) {
 		X2.push_back(this->CalcX2(x, F[i]));
@@ -244,7 +244,7 @@ std::vector<double> func::Function::CalcX2(std::vector<double> x, std::vector<st
 	return X2;
 }
 
-std::vector<int> func::Function::RouSelect(std::vector<double> c, double x) {
+std::vector<int> func1::Function::RouSelect(std::vector<double> c, double x) {
 	std::vector<int> div;
 	for (int i = 0; i < c.size(); i++) {
 		if (c[i] > x) {
@@ -254,7 +254,7 @@ std::vector<int> func::Function::RouSelect(std::vector<double> c, double x) {
 	return div;
 }
 
-std::vector<std::vector<double> > func::Function::RouSelect(std::vector<std::vector<std::vector<double> > > F, std::vector<std::vector<double> > CSC, double x) {
+std::vector<std::vector<double> > func1::Function::RouSelect(std::vector<std::vector<std::vector<double> > > F, std::vector<std::vector<double> > CSC, double x) {
 	std::vector<std::vector<double> > P;
 	for (int i = 0; i < CSC.size(); i++) {
 		std::vector<int> temCSC = this->RouSelect(CSC[i], x);
@@ -265,7 +265,7 @@ std::vector<std::vector<double> > func::Function::RouSelect(std::vector<std::vec
 	return P;
 }
 
-void func::Function::TwoAddOne(std::vector<int> &two) {
+void func1::Function::TwoAddOne(std::vector<int> &two) {
 	int n = two.size(), t = 0;
 	two[n - 1]++;
 	for (int i = n - 1; i >= 0; i--) {
@@ -281,7 +281,7 @@ void func::Function::TwoAddOne(std::vector<int> &two) {
 	}
 }
 
-bool func::Function::TwoIsFull(std::vector<int> two) {
+bool func1::Function::TwoIsFull(std::vector<int> two) {
 	bool result = true;
 	for (int i = 0; i < two.size(); i++) {
 		if (two[i] == 0) {
@@ -292,7 +292,7 @@ bool func::Function::TwoIsFull(std::vector<int> two) {
 	return result;
 }
 
-std::vector<std::vector<std::vector<double> > > func::Function::Group(std::vector<std::vector<double> > P) {
+std::vector<std::vector<std::vector<double> > > func1::Function::Group(std::vector<std::vector<double> > P) {
 	std::vector<std::vector<std::vector<double> > > Son;
 	std::vector<int> two(P.size(), 0);
 	while (!this->TwoIsFull(two)) {
@@ -309,7 +309,7 @@ std::vector<std::vector<std::vector<double> > > func::Function::Group(std::vecto
 	return Son;
 }
 
-std::vector<std::vector<double> > func::Function::Mul(std::vector<std::vector<double> > arrA, std::vector<std::vector<double> > arrB) {
+std::vector<std::vector<double> > func1::Function::Mul(std::vector<std::vector<double> > arrA, std::vector<std::vector<double> > arrB) {
 	int rowA = arrA.size();
 	int colA = arrA[0].size();
 	int rowB = arrB.size();
@@ -334,7 +334,7 @@ std::vector<std::vector<double> > func::Function::Mul(std::vector<std::vector<do
 	return res;
 }
 
-std::vector<std::vector<double> > func::Function::Inv(std::vector<std::vector<double> > a)
+std::vector<std::vector<double> > func1::Function::Inv(std::vector<std::vector<double> > a)
 {
 	int n = a.size();
 	std::vector<std::vector<double> > res(n);
@@ -448,7 +448,7 @@ std::vector<std::vector<double> > Add(std::vector<std::vector<double> > arrA, st
 	return res;
 }
 
-std::vector<std::vector<double> > func::Function::Xb(std::vector<double> x) {
+std::vector<std::vector<double> > func1::Function::Xb(std::vector<double> x) {
 	std::vector<std::vector<double> > result;
 	std::vector<double> temp(x.size(), 1);
 	result.push_back(temp);
@@ -456,7 +456,7 @@ std::vector<std::vector<double> > func::Function::Xb(std::vector<double> x) {
 	return ArrIn(result);
 }
 
-std::vector<std::vector<double> > func::Function::Xb(std::vector<std::vector<double> > F) {
+std::vector<std::vector<double> > func1::Function::Xb(std::vector<std::vector<double> > F) {
 	std::vector<std::vector<double> > result;
 	std::vector<double> temp(F[0].size(), 1);
 	result.push_back(temp);
@@ -466,7 +466,7 @@ std::vector<std::vector<double> > func::Function::Xb(std::vector<std::vector<dou
 	return ArrIn(result);
 }
 
-std::vector<std::vector<double> > func::Function::ComeBackP(std::vector<double> y, std::vector<std::vector<double> > Xb) {
+std::vector<std::vector<double> > func1::Function::ComeBackP(std::vector<double> y, std::vector<std::vector<double> > Xb) {
 	std::vector<std::vector<double> > p;
 	p.push_back(y);
 	p = this->ArrIn(p);
@@ -478,7 +478,7 @@ std::vector<std::vector<double> > func::Function::ComeBackP(std::vector<double> 
 	return res;
 }
 
-std::vector<double> func::Function::ComeBack(std::vector<double> x, std::vector<std::vector<double> > F) {
+std::vector<double> func1::Function::ComeBack(std::vector<double> x, std::vector<std::vector<double> > F) {
 	std::vector<std::vector<double> > Xb = this->Xb(F);
 	std::vector<std::vector<double> > a = this->ComeBackP(x, Xb);
 	std::vector<double> result;
@@ -494,7 +494,7 @@ std::vector<double> func::Function::ComeBack(std::vector<double> x, std::vector<
 	return result;
 }
 
-int func::Function::FindMaxCSC(std::vector<double> CSC) {
+int func1::Function::FindMaxCSC(std::vector<double> CSC) {
 	int res = 0;
 	double maxCSC = CSC[0];
 	for (int i = 1; i < CSC.size(); i++) {
@@ -506,7 +506,7 @@ int func::Function::FindMaxCSC(std::vector<double> CSC) {
 	return res;
 }
 
-std::vector<double> func::Function::Predict(std::vector<std::vector<double> > A, std::vector<std::vector<double> > Son, int q) {
+std::vector<double> func1::Function::Predict(std::vector<std::vector<double> > A, std::vector<std::vector<double> > Son, int q) {
 	std::vector<double> result;
 	long Frow = Son.size();
 	long Fcol = Son[0].size();
@@ -520,7 +520,7 @@ std::vector<double> func::Function::Predict(std::vector<std::vector<double> > A,
 	return result;
 }
 
-std::vector<double> func::Function::Predict(std::vector<double> x, int q) {
+std::vector<double> func1::Function::Predict(std::vector<double> x, int q) {
 	int n = x.size();
 	std::vector<std::vector<double> > F0 = this->MGF(x, n);
 	std::vector<double> x1 = this->Differential(x);
@@ -652,5 +652,19 @@ std::vector<double> func::Function::Predict(std::vector<double> x, int q) {
 	}
 	// Predict
 	std::vector<double> result = this->Predict(lastA, newSon, q);
+	return result;
+}
+
+std::vector<double> func1::Function::PredictE(std::vector<double> x, int q) {
+	std::vector<double> nhz = this->Predict(x, q);
+	std::vector<double> e;
+	for (int i = 0; i < x.size(); i++) {
+		e.push_back(x[i] - nhz[i]);
+	}
+	std::vector<double> ePre = this->Predict(e, q);
+	std::vector<double> result;
+	for (int i = x.size(); i < nhz.size(); i++) {
+		result.push_back(nhz[i] + ePre[i]);
+	}
 	return result;
 }

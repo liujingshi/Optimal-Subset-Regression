@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <stdio.h>
-#include "lib/Function.hpp"
+//#include "lib/Function.hpp"
+#include "lib/Function.1.hpp"
 
 using namespace std;
 
@@ -50,10 +51,13 @@ void show(vector<double> x)
 
 int main()
 {
-    func::Function f;
-    double a[36] = {38.3,35.9,36.2,37.5,37.0,40.5,39.0,36.6,36.6,36.6,38.1,36.7,35.7,36.0,36.0,37.6,36.7,39.7,36.5,36.0,37.9,34.4,38.2,36.4,36.8,36.7,35.2,38.5,36.4,36.8,37.0,37.9,35.7,38.0,37.2,36.5};
-    vector<double> x(a, a + 36);
-    vector<double> result = f.Predict(x, 5);
+    //func::Function f;
+    func1::Function f1;
+    double a[100] = {7, 4, 0, 0, 4, 9, 2, 3, 4, 8, 1, 1, 8, 9, 9, 6, 5, 7, 7, 4, 1, 9, 3, 5, 9, 7, 7, 8, 4, 2, 1, 7, 4, 4, 6, 5, 2, 5, 7, 3, 1, 9, 1, 1, 7, 6, 3, 0, 0, 5, 6, 7, 2, 0, 7, 1, 6, 9, 7, 8, 8, 3, 0, 6, 5, 7, 0, 4, 9, 1, 4, 2, 1, 5, 1, 8, 8, 8, 9, 7, 6, 1, 8, 4, 8, 9, 7, 2, 7, 2, 6, 3, 9, 1, 2, 6, 2, 9, 9, 7};
+    vector<double> x(a, a + 100);
+    //vector<double> result = f.Predict(x, 1);
+    //show(result);
+    vector<double> result = f1.PredictE(x, 1);
     show(result);
     return 0;
 }
