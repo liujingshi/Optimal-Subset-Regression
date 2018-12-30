@@ -53,11 +53,11 @@ int main()
 {
     //func::Function f;
     func1::Function f1;
-    double a[100] = {7, 4, 0, 0, 4, 9, 2, 3, 4, 8, 1, 1, 8, 9, 9, 6, 5, 7, 7, 4, 1, 9, 3, 5, 9, 7, 7, 8, 4, 2, 1, 7, 4, 4, 6, 5, 2, 5, 7, 3, 1, 9, 1, 1, 7, 6, 3, 0, 0, 5, 6, 7, 2, 0, 7, 1, 6, 9, 7, 8, 8, 3, 0, 6, 5, 7, 0, 4, 9, 1, 4, 2, 1, 5, 1, 8, 8, 8, 9, 7, 6, 1, 8, 4, 8, 9, 7, 2, 7, 2, 6, 3, 9, 1, 2, 6, 2, 9, 9, 7};
-    vector<double> x(a, a + 100);
+    double a[22] = {10, 11, 9, 12, 10, 13, 11, 14, 15, 14, 16, 15, 17, 18, 19, 21, 19, 20, 18, 21, 19, 22};
+    vector<double> x(a, a + 22);
     //vector<double> result = f.Predict(x, 1);
     //show(result);
-    vector<double> result = f1.PredictE(x, 1);
+    vector<double> result = f1.PredictE(x, 10);
     show(result);
     return 0;
 }

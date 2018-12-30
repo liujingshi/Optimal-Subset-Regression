@@ -88,6 +88,7 @@ std::vector<std::vector<double> > func1::Function::SumAdd(std::vector<std::vecto
 double func1::Function::CalcQ(std::vector<double> x)
 {
 	double xb = this->MGF(x, 1, 1);
+	printf("%lf\n", x[0]);
 	int n = x.size();
 	double sum = 0;
 	for (int t = 0; t < n; t++)
@@ -121,7 +122,7 @@ double func1::Function::CalcUV(std::vector<double> x)
 {
 	double sum = 0;
 	double n = x.size();
-	for (int i = 0; i < 0; i++)
+	for (int i = 0; i < n; i++)
 	{
 		sum += fabs(x[i]);
 	}
@@ -550,6 +551,7 @@ std::vector<double> func1::Function::Predict(std::vector<double> x, int q) {
 	CSC.push_back(CSC1);
 	CSC.push_back(CSC2);
 	CSC.push_back(CSC3);
+	printf("%lf\n", CSC0[0]);
 	double xx = 11.07;
 	std::vector<std::vector<double> > P = this->RouSelect(F, CSC, xx);
 	double xxs[27] = {40.113, 38.885, 37.652, 36.415, 35.172, 33.924, 32.761, 31.41, 30.144, 28.869, 27.587, 26.296, 24.996, 23.685, 22.262, 21.026, 19.675, 18.307, 16.919, 15.507, 14.067, 12.592, 11.07, 9.488, 7.815, 5.911, 3.841};

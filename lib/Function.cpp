@@ -121,7 +121,7 @@ double func::Function::CalcUV(std::vector<double> x)
 {
 	double sum = 0;
 	double n = x.size();
-	for (int i = 0; i < 0; i++)
+	for (int i = 0; i < n; i++)
 	{
 		sum += fabs(x[i]);
 	}
