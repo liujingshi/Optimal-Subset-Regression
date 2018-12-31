@@ -47,7 +47,6 @@ class OSR:
 
     def calcQx(self, x):
         xb = self.average(x, 1, 1)
-        print(x[0])
         n = len(x)
         sumi = 0
         for t in range(n):
